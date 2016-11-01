@@ -3,15 +3,9 @@
 # - Is based on composition and delegation
 # - It is easy to switch strategies at runtime. We simply swap out the strategy object
 
-class Formatter
-  def output_report(context)
-    raise 'Abstract method caled'
-  end
-end
-
 # Strategy objects aka strategies all do the same thing, in this case format the report
 
-class HTMLFormatter < Formatter
+class HTMLFormatter
   def output_report(context)
     puts('<html>')
     puts('  <head>')
@@ -26,7 +20,7 @@ class HTMLFormatter < Formatter
   end
 end
 
-class PlainTextFormatter < Formatter
+class PlainTextFormatter
   def output_report(context)
     puts("***** #{context.title} *****")
     context.text.each do |line|
