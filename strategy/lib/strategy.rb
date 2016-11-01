@@ -5,27 +5,23 @@
 
 # Strategy objects aka strategies all do the same thing, in this case format the report
 
-class HTMLFormatter
-  def output_report(context)
-    puts('<html>')
-    puts('  <head>')
-    puts("    <title>#{context.title}</title>")
-    puts('  </head>')
-    puts('  <body>')
-    context.text.each do |line|
-      puts("    <p>#{line}</p>" )
-    end
-    puts('  </body>')
-    puts('</html>')
+html_formatter = lambda do |context|
+  puts('<html>')
+  puts('  <head>')
+  puts("    <title>#{context.title}</title>")
+  puts('  </head>')
+  puts('  <body>')
+  context.text.each do |line|
+    puts("    <p>#{line}</p>" )
   end
+  puts('  </body>')
+  puts('</html>')
 end
 
-class PlainTextFormatter
-  def output_report(context)
-    puts("***** #{context.title} *****")
-    context.text.each do |line|
-      puts line
-    end
+plain_text_formatter = lambda do |context|
+  puts("***** #{context.title} *****")
+  context.text.each do |line|
+    puts line
   end
 end
 
@@ -37,19 +33,35 @@ class Report
   attr_reader :title, :text
   attr_accessor :formatter
 
-  def initialize(formatter)
+  def initialize(&formatter)
     @title = 'Monthly Report'
     @text = ['Things are going', 'really, really well.']
     @formatter = formatter
   end
 
   def output_report
-    @formatter.output_report(self)
+    @formatter.call(self)
   end
 end
 
-report = Report.new(HTMLFormatter.new)
+# Given that we have a Proc object and the Report constructor expects a code block,
+# we need to stick an ampersand in front of our Proc object when we create a new Report instance:
+
+report = Report.new(&html_formatter)
 report.output_report
 
-report.formatter = PlainTextFormatter.new
+# Update the proc
+report.formatter = plain_text_formatter
+report.output_report
+
+# Change the formater on the fly!
+report = Report.new do |context|
+  puts('html')
+  puts('  head')
+  puts("    title = #{context.title}")
+  puts('  body')
+  context.text.each do |line|
+    puts("    p = #{line}")
+  end
+end
 report.output_report
