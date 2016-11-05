@@ -5,6 +5,9 @@
 
 # Strategy objects aka strategies all do the same thing, in this case format the report
 
+# Ruby code blocks, which are essentially code wrapped up in an instant object (the Proc object),
+# are wonderfully useful for creating quick, albeit simple, strategy objects.
+
 html_formatter = lambda do |context|
   puts('<html>')
   puts('  <head>')
