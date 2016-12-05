@@ -1,5 +1,4 @@
 # The Observer pattern
-require 'observer'
 
 # By building this general mechanism, we have removed the implicit coupling
 # between the Employee class and the Payroll and TaxMan objects.
